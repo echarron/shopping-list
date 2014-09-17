@@ -3,9 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.xebia</groupId>
-    <artifactId>listedecourses</artifactId>
+    <artifactId>shopping-list</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+
+        <!-- Plugins -->
+        <tomcat7-maven-plugin.version>2.0</tomcat7-maven-plugin.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -56,4 +67,44 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat7-maven-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>1.3.1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jsSrcDir>${basedir}/src/main/webapp/js</jsSrcDir>
+                    <jsTestSrcDir>${basedir}/src/test/javascript</jsTestSrcDir>
+
+                    <preloadSources>
+                        <source>${project.basedir}/src/main/webapp/js/lib/jquery-1.11.1.js</source>
+                        <source>${project.basedir}/src/main/webapp/js/lib/angular.js</source>
+                        <source>${project.basedir}/src/main/webapp/js/lib/angular-mocks.js</source>
+                        <source>${project.basedir}/src/main/webapp/js/lib/angular-route.js</source>
+                    </preloadSources>
+
+                    <sourceIncludes>
+                        <include>app.js</include>
+                        <include>accountCreation.js</include>
+                    </sourceIncludes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
