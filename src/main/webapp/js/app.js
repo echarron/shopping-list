@@ -9,6 +9,10 @@ shoppingList.config(['$routeProvider',
                 templateUrl: 'views/signin.html',
                 controller: 'AccountCreationCtrl'
             }).
+            when('/me', {
+                templateUrl: 'views/me.html',
+                controller: 'MyAccountCtrl'
+            }).
             otherwise({
                 redirectTo: 'index.html'
             });

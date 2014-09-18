@@ -1,7 +1,10 @@
-shoppingList.controller('AccountCreationCtrl', [ '$scope', '$http', function($scope, $http) {
+shoppingList.controller('AccountCreationCtrl', [ '$scope', '$http', '$location', function($scope, $http, $location) {
     $scope.newAccount = {};
 
     $scope.create = function() {
-        $http.post('users', $scope.newAccount);
+        $http.post('/api/users', $scope.newAccount)
+            .success(function() {
+                $location.path('/me');
+            });
     };
 }]);

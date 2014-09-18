@@ -2,8 +2,9 @@
 
 describe('Create account controller', function() {
 
-    var $httpBackend,
-        $scope,
+    var httpBackend,
+        scope,
+        ctrl,
         newAccount = {
             username: "Nicolas Durand",
             email: "ndurand@xebia.fr",
@@ -12,33 +13,28 @@ describe('Create account controller', function() {
 
     beforeEach(module('shopping-list'));
 
-    beforeEach(inject(function(_$httpBackend_,$rootScope) {
-        $httpBackend = _$httpBackend_;
-        $scope = $rootScope.$new();
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
+        httpBackend = _$httpBackend_;
+        scope = $rootScope.$new();
+        ctrl = $controller('AccountCreationCtrl', {$scope: scope});
     }));
 
-    it('it should initiate AccountCreationCtrl', inject(function($controller) {
-
-        var scope = {};
-
-        $controller('AccountCreationCtrl', {$scope:scope});
-
+    it('it should initiate AccountCreationCtrl', function() {
         expect(scope.newAccount).toBeDefined();
-    }));
+    });
 
-    it('should send account creation to backend', inject(function($controller) {
+    it('should send account creation to backend', inject(function($location) {
 
-        $httpBackend
-            .whenPOST('users', newAccount)
+        httpBackend
+            .whenPOST('/api/users', newAccount)
             .respond(201, newAccount);
 
-        $controller("AccountCreationCtrl", {$scope: $scope});
+        scope.newAccount = newAccount;
 
-        $scope.newAccount = newAccount;
-
-        $scope.create();
-        $httpBackend.flush();
-        $httpBackend.expectPOST('users');
+        scope.create();
+        httpBackend.flush();
+        httpBackend.expectPOST('/api/users');
+        expect($location.path()).toBe('/me');
     }));
 
 });

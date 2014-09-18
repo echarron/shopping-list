@@ -1,9 +1,9 @@
-package fr.xebia.listedecourses;
+package fr.xebia.listedecourses.users;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.id;
+import static org.openqa.selenium.By.xpath;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -24,24 +24,26 @@ public class AccountStepdefs {
 
     @When("^(\\S+) creates an account$")
     public void Julien_creates_an_account(String username) throws Throwable {
-        webDriver.navigate().to("http://localhost:8080/shopping-list/");
+        webDriver.navigate().to("http://localhost:8080/");
         new WebDriverWait(webDriver, 1).until(presenceOfElementLocated(id("btnSignIn")));
         webDriver.findElement(id("btnSignIn")).click();
         new WebDriverWait(webDriver, 1).until(presenceOfElementLocated(id("formNewAccount")));
         webDriver.findElement(id("username")).sendKeys(username);
         webDriver.findElement(id("email")).sendKeys(username + "@yopmail.com");
         webDriver.findElement(id("password")).sendKeys("password");
-        webDriver.findElement(id("btnSubmit")).submit();
+        webDriver.findElement(id("btnSubmit")).click();
     }
 
     @Then("^he is logged in$")
     public void he_is_logged_in() throws Throwable {
-        new WebDriverWait(webDriver, 1).until(titleIs("My account"));
+        new WebDriverWait(webDriver, 1).until(presenceOfElementLocated(id("shopping-lists")));
+        assertThat(webDriver.getCurrentUrl()).endsWith("/me");
     }
 
-    @And("^he sees his shopping lists$")
+    @And("^he sees his empty shopping lists$")
     public void he_sees_his_shopping_lists() throws Throwable {
         assertThat(webDriver.findElement(id("shopping-lists"))).isNotNull();
+        assertThat(webDriver.findElement(xpath("(//h2)[1]")).getText()).isEqualTo("My shopping lists (0)");
         assertThat(webDriver.findElements(By.className("shopping-list"))).isEmpty();
     }
 
