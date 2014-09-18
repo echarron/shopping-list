@@ -1,4 +1,4 @@
-package fr.xebia.listedecourses;
+package fr.xebia.shoppinglist;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;

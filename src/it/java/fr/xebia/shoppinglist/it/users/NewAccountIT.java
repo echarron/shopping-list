@@ -1,4 +1,4 @@
-package fr.xebia.listedecourses.users;
+package fr.xebia.shoppinglist.it.users;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.http.ContentType.JSON;

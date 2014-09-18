@@ -1,5 +1,7 @@
 package fr.xebia.shoppinglist.users;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,10 +11,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 )
 public class User {
 
-    private final Long id;
+    protected final Long id;
     protected final String email;
     protected final String username;
     protected final String password;
+    protected final List<ShoppingList> lists = new ArrayList<>();
 
     @JsonCreator
     public User(@JsonProperty("email") String email,

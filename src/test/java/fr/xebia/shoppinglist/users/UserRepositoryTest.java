@@ -17,4 +17,13 @@ public class UserRepositoryTest {
         assertThat(createdUser).isEqualTo(expectedUser);
     }
 
+    @Test
+    public void should_retrieve_a_user_by_its_id() {
+        User createdUser = repository.create(new User("test@test.fr", "test", "password"));
+
+        User user = repository.get(createdUser.id);
+
+        assertThat(user).isSameAs(createdUser);
+    }
+
 }

@@ -7,12 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
-public class NewAccountResourceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class UsersResourceTest {
 
     @InjectMocks
-    private NewAccountResource resource;
+    private UsersResource resource;
 
     @Mock
     private UserRepository userRepository;
@@ -29,4 +30,18 @@ public class NewAccountResourceTest {
         assertThat(response.getEntity()).isEqualTo(expectedUser);
     }
 
+    @Test
+    public void should_find_user_and_add_him_a_new_list() {
+        long userId = 12345L;
+
+        User expectedUser = new User(userId, "test@test.fr", "test", "password");
+        given(userRepository.get(userId)).willReturn(expectedUser);
+
+        Response response = resource.addNewList(userId, "Apéro tonight");
+
+        assertThat(response.getStatus()).isEqualTo(201);
+        ShoppingList list = (ShoppingList) response.getEntity();
+        assertThat(list.id).isEqualTo(1L);
+        assertThat(list.title).isEqualTo("Apéro tonight");
+    }
 }

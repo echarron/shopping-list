@@ -10,7 +10,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.ServletModule;
-import fr.xebia.shoppinglist.users.NewAccountResource;
+import fr.xebia.shoppinglist.users.UsersResource;
 
 @ApplicationPath("api")
 public class RestConfig extends ResourceConfig {
@@ -27,7 +27,7 @@ public class RestConfig extends ResourceConfig {
         Injector injector = Guice.createInjector(new ServletModule() {
             @Override
             protected void configureServlets() {
-                bind(NewAccountResource.class);
+                bind(UsersResource.class);
             }
         });
 

@@ -1,4 +1,4 @@
-package fr.xebia.listedecourses.users;
+package fr.xebia.shoppinglist.step_definitions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.id;
@@ -23,7 +23,7 @@ public class AccountStepdefs {
     }
 
     @When("^(\\S+) creates an account$")
-    public void Julien_creates_an_account(String username) throws Throwable {
+    public void user_creates_an_account(String username) throws Throwable {
         webDriver.navigate().to("http://localhost:8080/");
         new WebDriverWait(webDriver, 1).until(presenceOfElementLocated(id("btnSignIn")));
         webDriver.findElement(id("btnSignIn")).click();
@@ -35,7 +35,7 @@ public class AccountStepdefs {
     }
 
     @Then("^he is logged in$")
-    public void he_is_logged_in() throws Throwable {
+    public void he_she_is_logged_in() throws Throwable {
         new WebDriverWait(webDriver, 1).until(presenceOfElementLocated(id("shopping-lists")));
         assertThat(webDriver.getCurrentUrl()).endsWith("/me");
     }
@@ -43,13 +43,12 @@ public class AccountStepdefs {
     @And("^he sees his empty shopping lists$")
     public void he_sees_his_shopping_lists() throws Throwable {
         assertThat(webDriver.findElement(id("shopping-lists"))).isNotNull();
-        assertThat(webDriver.findElement(xpath("(//h2)[1]")).getText()).isEqualTo("My shopping lists (0)");
+        assertThat(webDriver.findElement(xpath("(//h3)[1]")).getText()).isEqualTo("My shopping lists (0)");
         assertThat(webDriver.findElements(By.className("shopping-list"))).isEmpty();
     }
 
     @After
-    public void quitWebDriver() {
+    public void closeDriver() {
         webDriver.close();
     }
-
 }
