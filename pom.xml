@@ -38,6 +38,7 @@
         <assertj-core.version>1.6.0</assertj-core.version>
         <selenium-firefox-driver.version>2.41.0</selenium-firefox-driver.version>
         <rest-assured.version>2.3.1</rest-assured.version>
+        <myTestSourceDirectory>${project.basedir}/src/test</myTestSourceDirectory>
     </properties>
 
     <dependencyManagement>
@@ -163,6 +164,10 @@
     <profiles>
         <profile>
             <id>at</id>
+            <properties>
+                <maven.test.skip>false</maven.test.skip>
+                <myTestSourceDirectory>src/it/java</myTestSourceDirectory>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -195,14 +200,47 @@
                             <skipJasmineTests>true</skipJasmineTests>
                         </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>it</id>
+            <properties>
+                <maven.test.skip>false</maven.test.skip>
+                <myTestSourceDirectory>src/it/java</myTestSourceDirectory>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.searls</groupId>
+                        <artifactId>jasmine-maven-plugin</artifactId>
+                        <version>${jasmine-maven-plugin.version}</version>
+                        <configuration>
+                            <skipJasmineTests>true</skipJasmineTests>
+                        </configuration>
+                    </plugin>
 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven-failsafe-plugin.version}</version>
                         <configuration>
-                            <skipTests>true</skipTests>
+                            <encoding>UTF-8</encoding>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/CucumberRunner.java</exclude>
+                            </excludes>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -211,7 +249,7 @@
 
     <build>
 
-        <testSourceDirectory>src/it/java</testSourceDirectory>
+        <testSourceDirectory>${myTestSourceDirectory}</testSourceDirectory>
 
         <testResources>
             <testResource>
@@ -274,29 +312,6 @@
                         <include>myAccount.js</include>
                     </sourceIncludes>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <includes>
-                        <include>**/*IT.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/CucumberRunner.java</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
