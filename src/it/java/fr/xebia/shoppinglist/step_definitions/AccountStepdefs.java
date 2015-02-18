@@ -42,7 +42,7 @@ public class AccountStepdefs {
 
     @And("^he sees his empty shopping lists$")
     public void he_sees_his_shopping_lists() throws Throwable {
-        assertThat(webDriver.findElement(id("shopping-lists"))).isNull();
+        assertThat(webDriver.findElement(id("shopping-lists"))).isNotNull();
         assertThat(webDriver.findElement(xpath("(//h3)[1]")).getText()).isEqualTo("My shopping lists (0)");
         assertThat(webDriver.findElements(By.className("shopping-list"))).isEmpty();
     }
