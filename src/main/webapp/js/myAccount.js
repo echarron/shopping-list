@@ -6,6 +6,7 @@ shoppingList.controller('MyAccountCtrl', [ '$scope', '$http', '$location', funct
         $http.post('/api/users/1/lists', $scope.newListTitle)
             .success(function(data) {
                 $scope.myShoppingLists.push(data);
+                $scope.newListTitle = "";
                 $location.path('/me');
             });
     };
