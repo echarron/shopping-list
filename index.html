@@ -245,6 +245,57 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
           <!-- DEPLOY ON HEROKU -->
           <h3><a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déployer l'application dans le cloud</h3>
 
+          <p>Dans cette partie, nous allons tout d'abord créer une "application" sur heroku qui se chargera d'héberger notre application.</p>
+
+          <h4>Création de l'instance qui hébergera notre application</h4>
+          <ul>
+            <li>Se connecter sur le site <a href="https://dashboard.heroku.com/new" target="_blank">heroku.com</a> et créer une nouvelle application (photo)</li>
+            <li>Ajouter un worker à l'application (photo)</li>
+            <li>Ajouter une remote pointant vers heroku $ git remote add heroku git@heroku.com:shopping-list.git</li>
+            <li>Pusher le code source la remote $ git push heroku master</li>
+          </ul>
+
+          <pre><code>Fetching repository, done.
+Counting objects: 25, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (21/21), done.
+Writing objects: 100% (25/25), 3.62 KiB | 0 bytes/s, done.
+Total 25 (delta 8), reused 0 (delta 0)
+
+-----> Java app detected
+-----> Installing OpenJDK 1.7... done
+
+[...]
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 6.941 s
+[INFO] Finished at: 2015-02-18T16:07:01+00:00
+[INFO] Final Memory: 30M/649M
+[INFO] ------------------------------------------------------------------------
+-----> Discovering process types
+Procfile declares types -> web
+
+-----> Compressing... done, 102.1MB
+-----> Launching... done, v9
+https://shopping-list.herokuapp.com/ deployed to Heroku</code></pre>
+
+          <h4>Automatisation du déploiement</h4>
+
+          <p>Nous allons faire en sorte que chaque changement réalisé sur notre application soit déployé automatiquement lorsqu'un build se termine en succès.</p>
+
+          <ul>
+            <li>Se connecter sur codeship, sélectionner le projet et cliquer sur "Project settings" puis "Deployment". C'est dans cet écran que nous allons
+              configurer le déploiement de notre application sur heroku.</li>
+            <li>Sélectionner Heroku comme étant notre hebergeur (photo)</li>
+            <li>Remplisser les informations demandées (photo)</li>
+          </ul>
+
+          <p>La configuration est terminée ! Lors du prochain succès du job, l'application sera automatiquement déployée sur heroku (photo)</p>
+
+          <p>Modifier le README.md pour afficher le bon status du JOB (photo), le commiter, le commiter sur master et observer les changements sur heroku</p>
+
         </section>
 
         <footer>
