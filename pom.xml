@@ -22,6 +22,9 @@
         <guice-bridge.version>2.3.0</guice-bridge.version>
         <guice-servlet.version>3.0</guice-servlet.version>
 
+        <!-- Jetty -->
+        <jetty-servlet.version>9.2.5.v20141112</jetty-servlet.version>
+
         <!-- (De)Serialisation -->
         <jackson.version>2.3.3</jackson.version>
 
@@ -40,7 +43,6 @@
         <rest-assured.version>2.3.1</rest-assured.version>
         <myTestSourceDirectory>${project.basedir}/src/test</myTestSourceDirectory>
 
-        <jetty.version>9.2.5.v20141112</jetty.version>
         <maven-dependency-plugin.version>2.9</maven-dependency-plugin.version>
     </properties>
 
@@ -162,12 +164,12 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty-servlet.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty-servlet.version}</version>
         </dependency>
     </dependencies>
 
@@ -270,26 +272,26 @@
 
         <plugins>
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat7-maven-plugin.version}</version>
                 <configuration>
-                    <stopPort>8005</stopPort>
-                    <stopKey>STOP</stopKey>
+                    <path>/</path>
+                    <fork>true</fork>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>start-jetty</id>
+                        <id>start-container</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>start</goal>
+                            <goal>run</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>stop-jetty</id>
+                        <id>stop-container</id>
                         <phase>post-integration-test</phase>
                         <goals>
-                            <goal>stop</goal>
+                            <goal>shutdown</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -331,21 +333,11 @@
                 <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
-                            <goal>copy</goal>
                         </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.eclipse.jetty</groupId>
-                                    <artifactId>jetty-runner</artifactId>
-                                    <version>${jetty.version}</version>
-                                    <destFileName>jetty-runner.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
