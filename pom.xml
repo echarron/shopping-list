@@ -15,15 +15,12 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Rest -->
-        <jersey.version>2.13</jersey.version>
-        <!--<servlet.version>3.0.1</servlet.version>-->
+        <jersey.version>2.8</jersey.version>
+        <servlet.version>3.0.1</servlet.version>
 
         <!--  DI -->
-        <guice-bridge.version>2.3.0</guice-bridge.version>
+        <guice-bridge.version>2.2.0</guice-bridge.version>
         <guice-servlet.version>3.0</guice-servlet.version>
-
-        <!-- Jetty -->
-        <jetty-servlet.version>9.2.5.v20141112</jetty-servlet.version>
 
         <!-- (De)Serialisation -->
         <jackson.version>2.3.3</jackson.version>
@@ -42,8 +39,6 @@
         <selenium-firefox-driver.version>2.41.0</selenium-firefox-driver.version>
         <rest-assured.version>2.3.1</rest-assured.version>
         <myTestSourceDirectory>${project.basedir}/src/test</myTestSourceDirectory>
-
-        <maven-dependency-plugin.version>2.9</maven-dependency-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -62,7 +57,14 @@
 
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
+            <artifactId>jersey-container-servlet</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -77,7 +79,6 @@
             <version>${guice-servlet.version}</version>
         </dependency>
 
-        <!-- (De-)serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -96,7 +97,6 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!-- Test -->
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-guice</artifactId>
@@ -158,18 +158,6 @@
             <artifactId>json-schema-validator</artifactId>
             <version>${rest-assured.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Jetty -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty-servlet.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty-servlet.version}</version>
         </dependency>
     </dependencies>
 
@@ -325,21 +313,6 @@
                         <include>myAccount.js</include>
                     </sourceIncludes>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
