@@ -18,50 +18,233 @@
       <div class="inner">
 
         <header>
-          <h1>Shopping-list</h1>
-          <h2></h2>
+          <h1>TP sur les tests automatisés et l'intégration continue.</h1>
+          <h2>Comment développer de nouvelles fonctionnalités en répondant aux besoins, sans générer de régression ?</h2>
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/pvardanega/shopping-list/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/pvardanega/shopping-list/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
           <a href="https://github.com/pvardanega/shopping-list" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
         <hr>
 
         <section id="main_content">
-          <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+          <!-- INTRODUCTION-->
+          <h3><a id="intro" class="anchor" href="#intro" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+          <p>Ce TP va se dérouler en 3 parties :</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+          <ul>
+            <li>récupérer les sources du projet et les brancher sur l'intégration continue,</li>
+            <li>développer une nouvelle fonctionnalité,</li>
+            <li>la déployer automatiquement dans le cloud.</li>
+          </ul>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+          <p>Afin de pouvoir réaliser ce TP dans de bonnes conditions, il vous faut créer des comptes sur les services suivants :</p>
 
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+          <ul>
+            <li><a href="http://www.github.com" target="_blank">github</a> : service d'hébergement et de versionning de code source,</li>
+            <li><a href="http://www.codeship.com" target="_blank">codeship</a> : service permettant de réaliser des traitements d'intégration continue,</li>
+            <li><a href="http://www.heroku.com" target="_blank">heroku</a> : service d'hébergement d'applications.</li>
+          </ul>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+          <!-- SET UP CONTINUOUS INTEGRATION -->
+          <h3><a id="ic" class="anchor" href="#ic" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configurer l'intégration continue</h3
 
-<h3>
-<a id="rather-drive-stick" class="anchor" href="#rather-drive-stick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+          <p>Notre objectif pour cette étape est de récupérer les sources du projet et de configurer un job d'intégration continue qui va compiler et exécuter
+            nos tests unitaires, d'intégration et de comportement.</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+          <h4>Récupération des sources du projet</h4>
 
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+          <p>Connectez-vous github et allez sur la <a href="https://github.com/pvardanega/shopping-list" target="_blank">page du projet</a>. Puis "forker" le
+            projet. Ceci aura pour action de "copier" le projet dans votre compte github.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+          <p>Ensuite, depuis une console, exécuter les commandes suivantes :<p>
 
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+          <pre><code>$ git clone git@github.com:your_login/shopping-list.git
+$ cd shopping-list</code></pre>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="https://help.github.com/pages">https://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+          <p>Vous êtes à racine du projet. Celui-ci est structuré avec <a href="http://maven.apache.org/" target="_blank">maven</a> afin de pouvoir compiler
+            et exécuter les tests simplement. Pour valider que tout fonctionne, exécuter la commande suivante :</p>
+
+          <pre><code>$ mvn clean compile</code></pre>
+
+          <p>Vous devez obtenir un message de réussite :</p>
+
+          <pre><code>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building shopping-list 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ shopping-list ---
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ shopping-list ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/pvardanega/dev/sources/shopping-lists-master/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ shopping-list ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 6 source files to /Users/pvardanega/dev/sources/shopping-lists-master/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.930 s
+[INFO] Finished at: 2015-02-17T17:17:53+01:00
+[INFO] Final Memory: 17M/170M
+[INFO] ------------------------------------------------------------------------</code></pre>
+
+          <p>Le projet compile, tout va bien !</p>
+
+          <h4>Exécution des tests</h4>
+
+          <p>Ce projet contient déjà quelques fonctionnalités. Elles sont testées mais pour s'assurer que le code correspond aux besoins, nous allons exécuter tous
+          les tests</p>
+
+          <h5>Tests unitaires</h5>
+
+          <p>Nous allons lancer les tests unitaires en exécutant la commande suivante :</p>
+
+          <pre><code>$ mvn clean test</code></pre>
+
+          <p>Vous devez obtenir un message de réussite :</p>
+
+          <pre><code>[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building shopping-list 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[...]
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ shopping-list ---
+[INFO] Surefire report directory: /Users/pvardanega/dev/sources/shopping-lists-master/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running fr.xebia.shoppinglist.users.UserRepositoryTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 sec
+Running fr.xebia.shoppinglist.users.UsersResourceTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.373 sec
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] --- jasmine-maven-plugin:1.3.1.5:test (default) @ shopping-list ---
+[...]
+-------------------------------------------------------
+ J A S M I N E   S P E C S
+-------------------------------------------------------
+[INFO]
+Create account controller
+  it should initiate AccountCreationCtrl
+  should send account creation to backend
+
+My account controller
+  it should initiate MyAccountCtrl
+  it should create one new shopping list
+
+Application routes
+  should map routes to controllers
+
+Results: 5 specs, 0 failures
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.619 s
+[INFO] Finished at: 2015-02-17T21:59:43+01:00
+[INFO] Final Memory: 29M/275M
+[INFO] ------------------------------------------------------------------------</code></pre>
+
+          <h5>Tests d'intégration</h5>
+
+          <p>Nous allons lancer les tests d'intégration en exécutant la commande suivante :</p>
+
+          <pre><code>$ mvn clean verify -Pit</code></pre>
+
+          <p>Vous devez obtenir un message de réussite :</p>
+
+          <pre><code>[...]
+-------------------------------------------------------
+T E S T S
+-------------------------------------------------------
+Running fr.xebia.shoppinglist.it.shoppinglists.NewListsIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.772 sec - in fr.xebia.shoppinglist.it.shoppinglists.NewListsIT
+Running fr.xebia.shoppinglist.it.users.NewAccountIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 sec - in fr.xebia.shoppinglist.it.users.NewAccountIT
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[...]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 11.156 s
+[INFO] Finished at: 2015-02-17T22:44:36+01:00
+[INFO] Final Memory: 39M/211M
+[INFO] ------------------------------------------------------------------------</code></pre>
+
+          <h5>Tests de comportement</h5>
+
+          <p>Nous allons lancer les tests de comportement en exécutant la commande suivante :</p>
+
+          <pre><code>$ mvn clean verify -Pat</code></pre>
+
+          <p>Vous devez obtenir un message de réussite :</p>
+
+          <pre><code>[...]
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running fr.xebia.shoppinglist.it.shoppinglists.NewListsIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.772 sec - in fr.xebia.shoppinglist.it.shoppinglists.NewListsIT
+Running fr.xebia.shoppinglist.it.users.NewAccountIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 sec - in fr.xebia.shoppinglist.it.users.NewAccountIT
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[...]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 11.156 s
+[INFO] Finished at: 2015-02-17T22:44:36+01:00
+[INFO] Final Memory: 39M/211M
+[INFO] ------------------------------------------------------------------------</code></pre>
+
+
+          <p>C'est super, tous nos tests sont verts. Malheureusement, c'est un peu laborieux de lancer les tests manuellement avant chaque commit/push sur github.
+             Pour éviter cela, nous allons créer un job d'intégration continue qui s'en chargera à notre place.</p>
+
+          <h4>Configurer un job d'intégration continue</h4>
+
+          <p>Connectez-vous sur codeship pour créer un nouveau job d'intégration continue.</p>
+
+          <ul>
+            <li>Se connecter sur codeship.com</li>
+            <li>Create un projet (photo)</li>
+            <li>Sélectionner le service d'hébergement du code source (ici github - photo)</li>
+            <li>Choisir le bon projet (shopping-list - photo)</li>
+            <li>Configurer le job (photo)</li>
+            <li>Update pom.xml or README.md and push sur master</li>
+            <li>Rafraichir la page de codeship, le premier build devrait se lancer</li>
+            <li>Lire attentivement chaque étape</li>
+            <li>Modifier la configuration des tests du job en ajoutant l'exécution des tests d'intégration (photo)</li>
+            <li>Relancer un build (photo)</li>
+            <li>Modifier la configuration des tests du job en ajoutant l'exécution des tests de comportement (photo)</li>
+            <li>Relancer un build (photo)</li>
+          </ul>
+
+          <!-- ADD ONE NEW FEATURE -->
+          <h3><a id="new_feature" class="anchor" href="#new_feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nouvelle fonctionnalité</h3>
+
+
+          <!-- DEPLOY ON HEROKU -->
+          <h3><a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déployer l'application dans le cloud</h3>
+
         </section>
 
         <footer>
@@ -69,7 +252,6 @@ $ git checkout gh-pages
           This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
         </footer>
 
-        
       </div>
     </div>
   </body>
