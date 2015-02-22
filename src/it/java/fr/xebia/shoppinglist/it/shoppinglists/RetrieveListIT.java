@@ -10,9 +10,6 @@ import fr.xebia.shoppinglist.users.User;
 
 public class RetrieveListIT {
 
-    private static final String LIST_TITLE = "Romantic dinner";
-    private static final int LIST_ID = 1;
-
     @Test public void
     should_add_one_product_to_a_list() {
         given().
@@ -25,7 +22,7 @@ public class RetrieveListIT {
         ;
 
         given().
-                body(LIST_TITLE).
+                body("Romantic dinner").
                 contentType(JSON).
         when().
                 post("/api/users/1/lists").
@@ -36,12 +33,12 @@ public class RetrieveListIT {
         given().
                 contentType(JSON).
         when().
-                get("/api/users/1/lists/" + LIST_ID).
+                get("/api/users/1/lists/1").
         then().
                 statusCode(200).
                 body(matchesJsonSchemaInClasspath("schemas/list.json")).
-                body("id", equalTo(LIST_ID)).
-                body("title", equalTo(LIST_TITLE)).
+                body("id", equalTo(1)).
+                body("title", equalTo("Romantic dinner")).
                 body("products", emptyIterable())
         ;
 

@@ -33,9 +33,11 @@ public class RetrieveAllListsIT {
                 get("/api/users/1/lists").
         then().
                 statusCode(200).
-                body(equalTo("[{\"title\":\"Apero tonight\",\"id\":1}]"))
+                body(equalTo("[{\"title\":\"Apero tonight\",\"id\":1,\"products\":[]}]"))
         ;
 
+        given().
+                contentType(JSON).
         when().
                 delete("/api/users/1").
         then().
