@@ -21,4 +21,9 @@ public class UserRepository {
     public User get(Long userId) {
         return users.get(userId);
     }
+
+    public void remove(Long userId) {
+        counter.decrementAndGet();
+        users.remove(userId);
+    }
 }

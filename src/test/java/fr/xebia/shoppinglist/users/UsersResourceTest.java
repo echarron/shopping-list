@@ -1,7 +1,10 @@
 package fr.xebia.shoppinglist.users;
 
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import java.util.List;
 import javax.ws.rs.core.Response;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,5 +46,31 @@ public class UsersResourceTest {
         ShoppingList list = (ShoppingList) response.getEntity();
         assertThat(list.id).isEqualTo(1L);
         assertThat(list.title).isEqualTo("Apéro tonight");
+    }
+
+    @Test
+    public void should_retrieve_all_user_lists() {
+        Long userId = 12345L;
+
+        User expectedUser = new User(userId, "test@test.fr", "test", "password");
+        ShoppingList list1 = new ShoppingList(345L, "list1");
+        expectedUser.lists.add(list1);
+        ShoppingList list2 = new ShoppingList(346L, "list2");
+        expectedUser.lists.add(list2);
+        given(userRepository.get(userId)).willReturn(expectedUser);
+
+        Response response = resource.retrieveAllLists(userId);
+
+        List<ShoppingList> lists = (List<ShoppingList>) response.getEntity();
+        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+        assertThat(lists).hasSize(2).containsOnly(list1, list2);
+    }
+
+    @Test
+    public void should_remove_a_user() {
+        Response response = resource.removeUser(12345L);
+
+        verify(userRepository).remove(12345L);
+        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
     }
 }

@@ -1,30 +1,39 @@
-package fr.xebia.shoppinglist.it.users;
+package fr.xebia.shoppinglist.it.shoppinglists;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static com.jayway.restassured.http.ContentType.JSON;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Test;
 import fr.xebia.shoppinglist.users.User;
 
-public class NewAccountIT {
+public class RetrieveAllListsIT {
 
     @Test
-    public void should_create_one_new_account() {
+    public void should_add_one_new_list_to_an_existing_user() {
         given().
                 body(new User("test@test.fr", "norman", "password")).
                 contentType(JSON).
         when().
                 post("/api/users").
         then().
-                statusCode(201).
-                body(matchesJsonSchemaInClasspath("schemas/user.json")).
-                body("id", notNullValue()).
-                body("email", equalTo("test@test.fr")).
-                body("username", equalTo("norman")).
-                body("password", equalTo("password"))
+                statusCode(201)
+        ;
+
+        given().
+                body("Apero tonight").
+                contentType(JSON).
+        when().
+                post("/api/users/1/lists").
+        then().
+                statusCode(201)
+        ;
+
+        when().
+                get("/api/users/1/lists").
+        then().
+                statusCode(200).
+                body(equalTo("[{\"title\":\"Apero tonight\",\"id\":1}]"))
         ;
 
         when().

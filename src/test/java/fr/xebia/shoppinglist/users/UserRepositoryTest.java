@@ -26,4 +26,13 @@ public class UserRepositoryTest {
         assertThat(user).isSameAs(createdUser);
     }
 
+    @Test
+    public void should_remove_a_user() {
+        User createdUser = repository.create(new User("test@test.fr", "test", "password"));
+
+        repository.remove(createdUser.id);
+
+        User user = repository.get(createdUser.id);
+        assertThat(user).isNull();
+    }
 }
