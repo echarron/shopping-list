@@ -251,6 +251,199 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
           <!-- ADD ONE NEW FEATURE -->
           <h3><a id="new_feature" class="anchor" href="#new_feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nouvelle fonctionnalité</h3>
 
+          <p>Nous allons développer la fonctionnalité permettant d'ajouter des produits à une liste.</p>
+
+          <h4>Ajouter une test d'acceptance</h4>
+
+          <p>Ajouter un scénario de test dans la fichier shopping-list.feature</p>
+
+          <pre><code>Scenario:
+Given Claire, an existing user
+And she creates a new list with title 'Romantic dinner'
+When she adds 'candels' in the list 'Romantic dinner'
+Then the list 'Romantic dinner' contains the product 'candels'</code></pre>
+
+          <p>Puis implémenter les steps dans la classe ShoppingListStepdefs.java :</p>
+
+          <pre><code>@When("^she adds '(.*)' in the list '(.*)'$")
+public void she_adds_candels_in_the_list(String product, String listTitle) throws Throwable {
+    new WebDriverWait(webDriver, SECONDS.toSeconds(1L)).until(presenceOfElementLocated(className("shopping-list")));
+    webDriver.findElement(linkText(listTitle)).click();
+    assertThat(webDriver.findElement(id("products"))).isNotNull();
+
+    webDriver.findElement(id("newProduct")).sendKeys(product);
+    webDriver.findElement(id("btnAddProduct")).click();
+}
+
+@Then("^the list '(.*)' contains the product '(.*)'$")
+public void the_list_contains_the_product_candels(String listTitle, String product) throws Throwable {
+    assertThat(webDriver.findElement(id("products"))).isNotNull();
+    assertThat(webDriver.findElement(xpath("(//h3)[1]")).getText()).isEqualTo(listTitle + " (1)");
+    assertThat(webDriver.findElements(className("product"))).hasSize(1);
+    WebElement existingProduct = webDriver.findElements(className("product")).get(0);
+    assertThat(existingProduct.getText()).isEqualTo(product);
+}</code></pre>
+
+          <p>Enfin, démarrer le serveur et exécuter les tests d'acceptance qui doivent être en échec.</p>
+
+          <h4>Développer la vue</h4>
+
+          <p>Créer la vue list.html dans le répertoire "views" :</p>
+
+          <pre><code>CODE HTML ICI</code></pre>
+
+          <p>Afin quelle soit accessible, il nous faut :</p>
+
+          <ul>
+            <li>configurer une route permettant d'y accéder,</li>
+            <li>définir un lien qui pointerait vers cette page.</p>
+          </ul>
+
+          <h5>Définition de la route</h5>
+
+          <p>Nous allons modifier le fichier app.js qui contient la définition des routes. Pour celà, nous allons
+            d'abord modifier le test validant les routes dans le fichier routesSpec.js en ajoutant les deux assertions
+            suivantes :</p>
+
+          <pre><code>expect($route.routes['/lists/:listId'].templateUrl).toEqual('views/list.html');
+expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></pre>
+
+          <p>Relancer les tests unitaires :</p>
+
+          <pre><code>$ mvn jasmine:test</code></pre>
+
+          <p>Le test sur les routes devrait échouer.</p>
+
+          <p>Modifier le fichier app.js et ajouter la route :</p>
+
+          <pre><code>when('/lists/:listId', {
+    templateUrl: 'views/list.html',
+    controller: 'listCtrl'
+}).</code></pre>
+
+          <p>On y définie l'URL pour accéder à la page, le template html ainsi que le contrôleur qui gère le contenu de la vue.</p>
+
+          <p>Relancer les tests unitaires :</p>
+
+          <pre><code>$ mvn jasmine:test</code></pre>
+
+          <p>Le test sur les routes devrait passer.</p>
+
+          <h5>Appeler cette page depuis une autre page</h5>
+
+          <p>Nous allons maintenant pouvoir afficher le détail d'une liste de courses en cliquant sur son nom :</p>
+
+          <pre><code>MODIFIER LE FICHIER me.html</code></pre>
+
+          <h4>Développer le contrôleur en TDD</h4>
+
+          <p>Nous allons créer le contrôleur 'listCtrl.js' en commençant par les tests.</p> Son rôle est de faire le lien en
+          la vue et le serveur.</p>
+
+          <h5>Ajout d'un test unitaire</h5>
+
+          <p>Créer le fichier 'src/test/javascript/listControllerSpec.js' :</p>
+
+          <pre><code>'use strict';
+
+describe('Manage list controller', function() {
+    var httpBackend,
+        scope,
+        ctrl,
+        param,
+        list = {id: 1, title: "MyList", products: ["milk", "eggs", "pastas"]};
+
+    beforeEach(module('shopping-list'));
+
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, $routeParams) {
+        httpBackend = _$httpBackend_;
+        scope = $rootScope.$new();
+        param = $routeParams;
+        param.listId = 12;
+        ctrl = $controller('listCtrl', {$scope: scope});
+        httpBackend.whenGET('/lists/12').respond(200, list);
+    }));
+
+    it('it should initiate ListCtrl', function() {
+        httpBackend.flush();
+
+        expect(scope.list).toEqual(list);
+        expect(scope.newProduct).toBeDefined();
+    });
+});</code></pre>
+
+          <p>Relancer les tests unitaires :</p>
+
+          <pre><code>$ mvn jasmine:test</code></pre>
+
+          <p>Le test sur du contrôleur devrait échouer.</p>
+
+          <h5>Implémentation du controleur la plus simple possible pour faire passer le test</h5>
+
+          <p>Créer le fichier 'src/main/webapp/js/listCtrl.js' :</p>
+
+          <pre><code>shoppingList.controller('listCtrl', [ '$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    $scope.newProduct = "";
+    $scope.list = {};
+
+    $http.get('/lists/' + $routeParams.listId)
+        .success(function (data) {
+            $scope.list = data;
+        })
+    ;
+}]);</code></pre>
+
+          <p>L'inclure dans l'application (modifier le fichier 'index.html') :</p>
+
+          <pre><code>MODIFIER index.html</code></pre>
+
+          <p>Et le plugin jasmine de maven en :</p>
+
+          <pre><code>MODIFIER LE POM.XML</code></pre>
+
+          <p>Relancer les tests unitaires :</p>
+
+          <pre><code>$ mvn jasmine:test</code></pre>
+
+          <p>Le test sur du contrôleur devrait passer.</p>
+
+          <h5>Ajouter un test qui permet d'ajouter un produit à la liste</h5>
+
+          <p>Test :</p>
+          <pre><code>it('should add a product and notify the server', inject(function() {
+
+    scope.newProduct = "salad";
+    httpBackend
+        .whenPOST('/lists/12/products', scope.newProduct)
+        .respond(201, scope.newProduct);
+
+    scope.addProductToList();
+
+    httpBackend.flush();
+    httpBackend.expectPOST('/lists/12/products');
+    expect(scope.list.products).toContain(scope.newProduct);
+}));</code></pre>
+
+          <p>Implémentation :</p>
+
+          <pre><code>$scope.addProductToList = function () {
+    $http.post('/lists/' + $routeParams.listId + '/products', $scope.newProduct)
+        .success(function (data) {
+            $scope.list.products.push(data);
+        }
+    );
+};</code></pre>
+
+          <h4>Ajouter un test d'intégration sur l'API REST</h4>
+
+          <h4>Créer la ressource REST en TDD</h4>
+
+          <h4>Relancer le test d'intégration</h4>
+
+          <h4>Relancer le test d'acceptance</h4>
+
+          <h4>Committer et pusher la fonctionnalité</h4>
+
           <!-- DEPLOY ON HEROKU -->
           <h3><a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déployer l'application dans le cloud</h3>
 
