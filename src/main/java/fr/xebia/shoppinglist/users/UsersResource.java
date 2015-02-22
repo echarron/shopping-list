@@ -2,6 +2,7 @@ package fr.xebia.shoppinglist.users;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,28 +32,7 @@ public class UsersResource {
                 status(CREATED).
                 entity(userRepository.create(user)).
                 build()
-        ;
-    }
-
-    @Path("{userId}")
-    @DELETE
-    public Response removeUser(@PathParam("userId") Long userId) {
-        userRepository.remove(userId);
-        return Response.ok().build();
-    }
-
-    @Path("{userId}/lists")
-    @POST
-    public Response addNewList(@PathParam("userId") Long userId, String shoppingListTitle) {
-        User user = userRepository.get(userId);
-        ShoppingList shoppingList = new ShoppingList(user.lists.size() + 1L, shoppingListTitle);
-        user.lists.add(shoppingList);
-        return Response.
-                ok().
-                status(CREATED).
-                entity(shoppingList).
-                build()
-        ;
+                ;
     }
 
     @Path("{userId}/lists")
@@ -62,5 +42,64 @@ public class UsersResource {
                 ok().
                 entity(userRepository.get(userId).lists).
                 build();
+    }
+
+    @Path("{id}/lists")
+    @POST
+    public Response addNewList(@PathParam("id") Long userId, String shoppingListTitle) {
+        User user = userRepository.get(userId);
+        ShoppingList shoppingList = new ShoppingList(user.lists.size() + 1L, shoppingListTitle);
+        user.lists.add(shoppingList);
+        return Response.
+                ok().
+                status(CREATED).
+                entity(shoppingList).
+                build()
+                ;
+    }
+
+    @Path("{userId}/lists/{listId}")
+    @GET
+    public Response retrieveList(@PathParam("userId") Long userId,
+                                 @PathParam("listId") Long listId) {
+        User user = userRepository.get(userId);
+        for (ShoppingList list : user.lists) {
+            if (listId.equals(list.id)) {
+                return Response.
+                        ok().
+                        entity(list).
+                        build()
+                        ;
+            }
+        }
+        return Response.
+                status(NOT_FOUND).
+                build()
+                ;
+    }
+
+    @Path("{userId}/lists/{listId}/products")
+    @POST
+    public Response addProductToList(@PathParam("userId") Long userId,
+                                     @PathParam("listId") Long listId,
+                                     String product) {
+        User user = userRepository.get(userId);
+        for (ShoppingList list : user.lists) {
+            if (listId.equals(list.id)) {
+                list.addProduct(product);
+            }
+        }
+        return Response.
+                ok().
+                entity(product).
+                build()
+                ;
+    }
+
+    @Path("{userId}")
+    @DELETE
+    public Response removeUser(@PathParam("userId") Long userId) {
+        userRepository.remove(userId);
+        return Response.ok().build();
     }
 }

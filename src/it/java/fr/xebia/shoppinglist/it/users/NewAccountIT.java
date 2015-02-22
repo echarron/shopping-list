@@ -1,7 +1,6 @@
 package fr.xebia.shoppinglist.it.users;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.when;
 import static com.jayway.restassured.http.ContentType.JSON;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,6 +26,8 @@ public class NewAccountIT {
                 body("password", equalTo("password"))
         ;
 
+        given().
+                contentType(JSON).
         when().
                 delete("/api/users/1").
         then().

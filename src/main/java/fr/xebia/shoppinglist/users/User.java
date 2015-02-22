@@ -25,10 +25,15 @@ public class User {
     }
 
     public User(Long id, String email, String username, String password) {
+        this(id, email, username, password, new ArrayList<ShoppingList>());
+    }
+
+    public User(Long id, String email, String username, String password, List<ShoppingList> lists) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.lists.addAll(lists);
     }
 
     @Override

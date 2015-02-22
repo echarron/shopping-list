@@ -8,7 +8,10 @@
         },
         "title": {
             "type": "string"
+        },
+        "products": {
+            "type": "array"
         }
     },
-    "required": ["id", "title"]
+    "required": ["id", "title", "products"]
 }
