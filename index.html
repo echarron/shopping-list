@@ -223,24 +223,33 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
           <p>Connectez-vous sur codeship pour créer un nouveau job d'intégration continue.</p>
 
-          <ul>
-            <li>Se connecter sur codeship.com</li>
-            <li>Create un projet (photo)</li>
-            <li>Sélectionner le service d'hébergement du code source (ici github - photo)</li>
-            <li>Choisir le bon projet (shopping-list - photo)</li>
-            <li>Configurer le job (photo)</li>
-            <li>Update pom.xml or README.md and push sur master</li>
-            <li>Rafraichir la page de codeship, le premier build devrait se lancer</li>
-            <li>Lire attentivement chaque étape</li>
-            <li>Modifier la configuration des tests du job en ajoutant l'exécution des tests d'intégration (photo)</li>
-            <li>Relancer un build (photo)</li>
-            <li>Modifier la configuration des tests du job en ajoutant l'exécution des tests de comportement (photo)</li>
-            <li>Relancer un build (photo)</li>
-          </ul>
+          <img src="images/codeship-create-new-project.png"/>
+
+          <p>Ensuite, il faut que codeship puisse accéder aux sources du projet afin de pouvoir les récupérer pour exécuter des
+            actions.</p>
+
+          <img src="images/codeship-select-sources-on-github.png"/>
+
+          <p>Puis configurer le job pour qu'il compile les sources et exécute les test unitaires.</p>
+
+          <img src="images/codeship-setup-job.png"/>
+
+          <p>Sauvergarder et observer l'exécution du job :</p>
+
+          <img src="images/codeship-first-build.png" />
+
+          <p>Modifier la configuration des tests du job en ajoutant l'exécution des tests d'intégration.</p>
+
+          <img src="images/codeship-add-it.png"/>
+
+          <p>Et relancer un build.</p>
+
+          <img src="images/codeship-start-new-build.png"/>
+
+          <p>Enfin, faites de même avec les tests d'acceptance.</p>
 
           <!-- ADD ONE NEW FEATURE -->
           <h3><a id="new_feature" class="anchor" href="#new_feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nouvelle fonctionnalité</h3>
-
 
           <!-- DEPLOY ON HEROKU -->
           <h3><a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déployer l'application dans le cloud</h3>
@@ -248,12 +257,21 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
           <p>Dans cette partie, nous allons tout d'abord créer une "application" sur heroku qui se chargera d'héberger notre application.</p>
 
           <h4>Création de l'instance qui hébergera notre application</h4>
-          <ul>
-            <li>Se connecter sur le site <a href="https://dashboard.heroku.com/new" target="_blank">heroku.com</a> et créer une nouvelle application (photo)</li>
-            <li>Ajouter un worker à l'application (photo)</li>
-            <li>Ajouter une remote pointant vers heroku $ git remote add heroku git@heroku.com:shopping-list.git</li>
-            <li>Pusher le code source la remote $ git push heroku master</li>
-          </ul>
+
+          <p>Se connecter sur le site <a href="https://dashboard.heroku.com/new" target="_blank">heroku.com</a> et créer une nouvelle application.</p>
+
+          <img src="images/heroku-create-app.png"/>
+
+          <p>Ajouter un worker à l'application, ce qui correspond à une unité de calcul. Ceci alloura de la mémoire et du CPU à votre application.</p>
+
+          <img src="images/heroku-add-worker.png"/>
+
+          <p>Ensuite, revenir dans le répertoire source de votre projet puis ajouter une "remote" à la configuration git et pusher le code source sur cette remote :</p>
+
+          <pre><code>$ git remote add heroku git@heroku.com:shopping-list.git
+$ git push heroku master</code></pre>
+
+          <p>Le résultat doit être le suivant :</p>
 
           <pre><code>Fetching repository, done.
 Counting objects: 25, done.
@@ -285,16 +303,30 @@ https://shopping-list.herokuapp.com/ deployed to Heroku</code></pre>
 
           <p>Nous allons faire en sorte que chaque changement réalisé sur notre application soit déployé automatiquement lorsqu'un build se termine en succès.</p>
 
-          <ul>
-            <li>Se connecter sur codeship, sélectionner le projet et cliquer sur "Project settings" puis "Deployment". C'est dans cet écran que nous allons
-              configurer le déploiement de notre application sur heroku.</li>
-            <li>Sélectionner Heroku comme étant notre hebergeur (photo)</li>
-            <li>Remplisser les informations demandées (photo)</li>
-          </ul>
+          <p>Tout d'abord, connectez-vous sur codeship, sélectionner le projet et cliquer sur "Project settings" puis "Deployment". C'est dans cet écran que nous allons
+            configurer le déploiement de notre application sur heroku.</p>
 
-          <p>La configuration est terminée ! Lors du prochain succès du job, l'application sera automatiquement déployée sur heroku (photo)</p>
+          <p>Sélectionner Heroku comme étant notre hebergeur :</p>
 
-          <p>Modifier le README.md pour afficher le bon status du JOB (photo), le commiter, le commiter sur master et observer les changements sur heroku</p>
+          <img src="images/codeship-select-heroku.png" />
+
+          <p>Ensuite, remplissez les informations demandées :</p>
+
+          <img src="images/codeship-setup-heroku.png" />
+
+          <p>La configuration est terminée ! Lors du prochain succès du job, l'application sera automatiquement déployée sur heroku.</p>
+
+          <img src="images/codeship-deployment-setup.png" />
+
+          <p>Afin de valider le déploiment, nous allons modifier le fichier README.md pour afficher le bon status de l'intégration continue, le commiter, observer
+            les changements sur codeship, la dernière étape doit concerné le déploiement. Votre application doit toujours être déployée.</p>
+
+          <p>Vous devez aussi observer un logo codeship de couleur grise, verte ou rouge (en fonction du résultat de la dernière exécution du job)
+            sur la page principale de votre projet github.</p>
+
+          <p>Pour cela, aller dans le menu "Notifications" des "Settings du projet" et copier/coller les informations.</p>
+
+          <img src="images/github-add-codeship-status.png" />
 
         </section>
 
