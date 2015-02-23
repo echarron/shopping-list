@@ -40,7 +40,7 @@
             <li>la déployer automatiquement dans le cloud.</li>
           </ul>
 
-          <p>Afin de pouvoir réaliser ce TP dans de bonnes conditions, il vous faut créer des comptes sur les services suivants :</p>
+          <p>Afin de pouvoir réaliser ce TP dans de bonnes conditions, il vous faut créer des comptes sur les services suivant :</p>
 
           <ul>
             <li><a href="http://www.github.com" target="_blank">github</a> : service d'hébergement et de versionning de code source,</li>
@@ -56,15 +56,15 @@
 
           <h4>Récupération des sources du projet</h4>
 
-          <p>Connectez-vous github et allez sur la <a href="https://github.com/pvardanega/shopping-list" target="_blank">page du projet</a>. Puis "forker" le
+          <p>Connectez-vous à github et allez sur la <a href="https://github.com/pvardanega/shopping-list" target="_blank">page du projet</a>. Puis "forker" le
             projet. Ceci aura pour action de "copier" le projet dans votre compte github.</p>
 
-          <p>Ensuite, depuis une console, exécuter les commandes suivantes :<p>
+          <p>Ensuite, depuis une console, exécuter les commandes suivantes (en remplacer your_login par la bonne valeur) :<p>
 
           <pre><code>$ git clone git@github.com:your_login/shopping-list.git
 $ cd shopping-list</code></pre>
 
-          <p>Vous êtes à racine du projet. Celui-ci est structuré avec <a href="http://maven.apache.org/" target="_blank">maven</a> afin de pouvoir compiler
+          <p>Vous êtes à la racine du projet. Celui-ci est structuré avec <a href="http://maven.apache.org/" target="_blank">maven</a> afin de pouvoir compiler
             et exécuter les tests simplement. Pour valider que tout fonctionne, exécuter la commande suivante :</p>
 
           <pre><code>$ mvn clean compile</code></pre>
@@ -99,7 +99,7 @@ $ cd shopping-list</code></pre>
           <h4>Exécution des tests</h4>
 
           <p>Ce projet contient déjà quelques fonctionnalités. Elles sont testées mais pour s'assurer que le code correspond aux besoins, nous allons exécuter tous
-          les tests</p>
+          les tests.</p>
 
           <h5>Tests unitaires</h5>
 
@@ -230,11 +230,13 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
           <img src="images/codeship-select-sources-on-github.png"/>
 
-          <p>Puis configurer le job pour qu'il compile les sources et exécute les test unitaires.</p>
+          <p>Choisissez votre projet puis configurer le job pour qu'il compile les sources et exécute les test unitaires.</p>
 
           <img src="images/codeship-setup-job.png"/>
 
-          <p>Sauvergarder et observer l'exécution du job :</p>
+          <p>Sauvergarder puis modifier le fichier README.md (ajouter une ligne vide), committer et pusher sur master.</p>
+
+          <p>Observer l'exécution du job :</p>
 
           <img src="images/codeship-first-build.png" />
 
@@ -242,26 +244,26 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
           <img src="images/codeship-add-it.png"/>
 
-          <p>Et relancer un build.</p>
+          <p>Et relancer un build. Les test doivent passer.</p>
 
           <img src="images/codeship-start-new-build.png"/>
 
-          <p>Enfin, faites de même avec les tests d'acceptance.</p>
+          <p>Enfin, faites de même avec les tests de comportement.</p>
 
           <!-- ADD ONE NEW FEATURE -->
           <h3><a id="new_feature" class="anchor" href="#new_feature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nouvelle fonctionnalité</h3>
 
           <p>Nous allons développer la fonctionnalité permettant d'ajouter des produits à une liste.</p>
 
-          <h4>Ajouter une test d'acceptance</h4>
+          <h4>Ajouter une test de comportement</h4>
 
           <p>Ajouter un scénario de test dans la fichier shopping-list.feature</p>
 
           <pre><code>Scenario:
-Given Claire, an existing user
-And she creates a new list with title 'Romantic dinner'
-When she adds 'candels' in the list 'Romantic dinner'
-Then the list 'Romantic dinner' contains the product 'candels'</code></pre>
+  Given Claire, an existing user
+  And she creates a new list with title 'Romantic dinner'
+  When she adds 'candels' in the list 'Romantic dinner'
+  Then the list 'Romantic dinner' contains the product 'candels'</code></pre>
 
           <p>Puis implémenter les steps dans la classe ShoppingListStepdefs.java :</p>
 
@@ -284,13 +286,32 @@ public void the_list_contains_the_product_candels(String listTitle, String produ
     assertThat(existingProduct.getText()).isEqualTo(product);
 }</code></pre>
 
-          <p>Enfin, démarrer le serveur et exécuter les tests d'acceptance qui doivent être en échec.</p>
+          <p>Enfin, exécuter les tests de comportement qui doivent être en échec.</p>
 
           <h4>Développer la vue</h4>
 
           <p>Créer la vue list.html dans le répertoire "views" :</p>
 
-          <pre><code>CODE HTML ICI</code></pre>
+          <pre><code>&lt;div>
+    &lt;div class="row">
+        &lt;h3>{{list.title}} ({{list.products.length}})&lt;/h3>
+    &lt;/div>
+    &lt;div class="row">
+        &lt;div class="col-sm-4">
+            &lt;div class="input-group">
+                &lt;input type="text" class="form-control" id="newProduct" ng-model="newProduct" placeholder="Add product" required>
+                &lt;span class="input-group-btn">
+                    &lt;button class="btn btn-primary" type="button" id="btnAddProduct" ng-click="addProductToList()">Add product&lt;/button>
+                &lt;/span>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+    &lt;div class="row">
+        &lt;ul id="products">
+            &lt;li class="product" ng-repeat="product in list.products" value="{{product}}">{{product}}&lt;/li>
+        &lt;/ul>
+    &lt;/div>
+&lt;/div></code></pre>
 
           <p>Afin quelle soit accessible, il nous faut :</p>
 
@@ -331,13 +352,21 @@ expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></
 
           <h5>Appeler cette page depuis une autre page</h5>
 
-          <p>Nous allons maintenant pouvoir afficher le détail d'une liste de courses en cliquant sur son nom :</p>
+          <p>Nous allons maintenant pouvoir afficher le détail d'une liste de courses en cliquant sur son nom.</p>
 
-          <pre><code>MODIFIER LE FICHIER me.html</code></pre>
+          <p>Modifier l'affichage des listes de courses (fichier me.html) :</p>
+
+          <pre><code>&lt;div class="row">
+    &lt;ul>
+        &lt;li class="shopping-list" ng-repeat="list in myShoppingLists" value="{{list.id}}">
+            &lt;a href="#/lists/{{list.id}}">{{list.title}}&lt;/a>
+        &lt;/li>
+    &lt;/ul>
+&lt;/div></code></pre>
 
           <h4>Développer le contrôleur en TDD</h4>
 
-          <p>Nous allons créer le contrôleur 'listCtrl.js' en commençant par les tests.</p> Son rôle est de faire le lien en
+          <p>Nous allons créer le contrôleur 'listCtrl.js' en commençant par les tests. Son rôle est de faire le lien en
           la vue et le serveur.</p>
 
           <h5>Ajout d'un test unitaire</h5>
@@ -347,6 +376,7 @@ expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></
           <pre><code>'use strict';
 
 describe('Manage list controller', function() {
+
     var httpBackend,
         scope,
         ctrl,
@@ -361,7 +391,7 @@ describe('Manage list controller', function() {
         param = $routeParams;
         param.listId = 12;
         ctrl = $controller('listCtrl', {$scope: scope});
-        httpBackend.whenGET('/lists/12').respond(200, list);
+        httpBackend.whenGET('/api/users/1/lists/12').respond(200, list);
     }));
 
     it('it should initiate ListCtrl', function() {
@@ -372,11 +402,14 @@ describe('Manage list controller', function() {
     });
 });</code></pre>
 
+          <p>Ce test permet de valider l'instanciation du contrôleur. Vous pouvez remarquer qu'on teste qu'un appel au serveur
+            est bien effectué et que la liste retournée par le serveur est bien stockée dans la variable 'list'.</p>
+
           <p>Relancer les tests unitaires :</p>
 
           <pre><code>$ mvn jasmine:test</code></pre>
 
-          <p>Le test sur du contrôleur devrait échouer.</p>
+          <p>Le test du contrôleur devrait échouer.</p>
 
           <h5>Implémentation du controleur la plus simple possible pour faire passer le test</h5>
 
@@ -386,7 +419,7 @@ describe('Manage list controller', function() {
     $scope.newProduct = "";
     $scope.list = {};
 
-    $http.get('/lists/' + $routeParams.listId)
+    $http.get('/api/users/1/lists/' + $routeParams.listId)
         .success(function (data) {
             $scope.list = data;
         })
@@ -395,69 +428,293 @@ describe('Manage list controller', function() {
 
           <p>L'inclure dans l'application (modifier le fichier 'index.html') :</p>
 
-          <pre><code>MODIFIER index.html</code></pre>
+          <pre><code>&lt;script src="js/listCtrl.js">&lt;/script></code></pre>
 
-          <p>Et le plugin jasmine de maven en :</p>
+          <p>Ainsi que dans la configuration du plugin jasmine de maven (pom.xml) :</p>
 
-          <pre><code>MODIFIER LE POM.XML</code></pre>
+          <pre><code>&lt;sourceIncludes>
+  &lt;include>app.js&lt;/include>
+  &lt;include>accountCreation.js&lt;/include>
+  &lt;include>myAccount.js&lt;/include>
+  &lt;include>listCtrl.js&lt;/include>
+&lt;/sourceIncludes></code></pre>
 
           <p>Relancer les tests unitaires :</p>
 
           <pre><code>$ mvn jasmine:test</code></pre>
 
-          <p>Le test sur du contrôleur devrait passer.</p>
+          <p>Le test du contrôleur devrait passer.</p>
 
           <h5>Ajouter un test qui permet d'ajouter un produit à la liste</h5>
 
-          <p>Test :</p>
           <pre><code>it('should add a product and notify the server', inject(function() {
-
     scope.newProduct = "salad";
     httpBackend
-        .whenPOST('/lists/12/products', scope.newProduct)
+        .whenPOST('/api/users/1/lists/12/products', scope.newProduct)
         .respond(201, scope.newProduct);
 
     scope.addProductToList();
 
     httpBackend.flush();
     httpBackend.expectPOST('/lists/12/products');
-    expect(scope.list.products).toContain(scope.newProduct);
+    expect(scope.list.products).toContain("salad");
+    expect(scope.newProduct).toBe("");
 }));</code></pre>
 
           <p>Implémentation :</p>
 
           <pre><code>$scope.addProductToList = function () {
-    $http.post('/lists/' + $routeParams.listId + '/products', $scope.newProduct)
+    $http.post('/api/users/1/lists/' + $routeParams.listId + '/products', $scope.newProduct)
         .success(function (data) {
+            $scope.newProduct = "";
             $scope.list.products.push(data);
         }
     );
 };</code></pre>
 
-          <h4>Ajouter un test d'intégration sur l'API REST</h4>
+          <p>Relancer les tests unitaires :</p>
 
-          <h4>Créer la ressource REST en TDD</h4>
+          <pre><code>$ mvn jasmine:test</code></pre>
 
-          <h4>Relancer le test d'intégration</h4>
+          <p>Le test du contrôleur devrait passer. À cette étape, la vue et le contrôleur sont développés et testés
+          selon nos besoin et de la manière la plus simple possible. Maintenant, passons à la partie serveur.</p>
 
-          <h4>Relancer le test d'acceptance</h4>
+          <h4>Ajouter un test d'intégration qui va tester l'ajout d'un produit</h4>
+
+          <p>Nous allons maintement nous concentrer sur la partie serveur en commençant par créer un test d'intégration.</p>
+
+          <p>Créer la classe AddProductIT.java qui va ajouter un produit à une liste d'un utilisateur :</p>
+
+          <pre><code>public class AddProductIT {
+
+    @Test public void
+    should_add_one_product_to_a_list() {
+        given().
+                body(new User("test@test.fr", "norman", "password")).
+                contentType(JSON).
+        when().
+                post("/api/users").
+        then().
+                statusCode(201)
+        ;
+
+        given().
+                body("Romantic dinner").
+                contentType(JSON).
+        when().
+                post("/api/users/1/lists").
+        then().
+                statusCode(201)
+        ;
+
+        given().
+                body("Salad").
+                contentType(JSON).
+        when().
+                post("/api/users/1/lists/1/products").
+        then().
+                statusCode(200).
+                body(equalTo("Salad"))
+        ;
+
+        given().
+                contentType(JSON).
+        when().
+                delete("/api/users/1").
+        then().
+                statusCode(200)
+        ;
+    }
+}</code></pre>
+
+          <p>Si vous lancez les tests d'intégration, ils doivent échouer.</p>
+
+          <h4>Implémenter la ressource en TDD</h4>
+
+          <p>Passons maintenant à l'implémentation de ce test. Nous allons d'abord créer notre ressource REST qui réceptionnera les
+            requêtes venant du contrôleur javascript.</p>
+
+          <p>Pour celà, ajoutons un test dans la classe UsersResourceTest.java :</p>
+
+          <pre><code>@Test public void
+should_add_one_product_to_a_list() {
+    // Given
+    Long userId = 54321L;
+    Long listId = 132L;
+
+    User expectedUser = new User(userId, "test@test.fr", "test", "password", Lists.newArrayList(new ShoppingList(listId, "Romantic dinner")));
+    given(userRepository.get(userId)).willReturn(expectedUser);
+
+    // When
+    Response response = resource.addProductToList(userId, listId, "Salad");
+
+    // Then
+    assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+    assertThat(response.getEntity()).isEqualTo("Salad");
+}</code></pre>
+
+          <p>Puis implémenter la fonctionnalité :</p>
+
+          <pre><code>@Path("{userId}/lists/{listId}/products")
+@POST
+public Response addProductToList(@PathParam("userId") Long userId,
+                                 @PathParam("listId") Long listId,
+                                 String product) {
+    User user = userRepository.get(userId);
+    for (ShoppingList list : user.lists) {
+        if (listId.equals(list.id)) {
+            list.addProduct(product);
+        }
+    }
+    return Response.
+            ok().
+            entity(product).
+            build()
+            ;
+}</code></pre>
+
+          <p>La méthode 'addProduct' n'existant pas, créez-la en la laissant vide.</p>
+
+          <p>Relancer les tests unitaires, ils doivent passer.</p>
+
+          <p>Maintenant, nous allons tester puis implémentater la méthode 'addProduct'. Pour se faire, créer la classe
+            ShoppingListTest.java et ajouter un test validant que la liste contient bien un produit après l'avoir ajouté :</p>
+
+          <pre><code>@Test public void
+should_add_a_product_to_the_list() {
+    ShoppingList list = new ShoppingList(1234L, "MyList");
+
+    list.addProduct("Salad");
+
+    assertThat(list.products).hasSize(1).containsExactly("Salad");
+}</code></pre>
+
+          <p>Enfin, implémentez-la :</p>
+
+          <pre><code>public void addProduct(String product) {
+    this.products.add(product);
+}</code></pre>
+
+          <p>Relancer les tests unitaires et d'intégration, seuls les tests unitaires doivent passer. En effet, nous venons de
+          modifier une classe qui a des conséquences sur un autre test d'intégration. Corriger et relancer les relancer les tests
+          d'intégration. Ils doivent passer.</p>
+
+          <h4>Ajouter un test d'intégration qui va tester la récupérer d'une liste d'un utilisateur</h4>
+
+          <p>Nous allons utiliser la même méthode que pour l'ajout d'un produit à une liste. Commencer par créer
+            la classe RetrieveListIT.java :</p>
+
+          <pre><code>public class RetrieveListIT {
+
+    @Test public void
+    should_add_one_product_to_a_list() {
+        given().
+                body(new User("test@test.fr", "norman", "password")).
+                contentType(JSON).
+        when().
+                post("/api/users").
+        then().
+                statusCode(201)
+        ;
+
+        given().
+                body("Romantic dinner").
+                contentType(JSON).
+        when().
+                post("/api/users/1/lists").
+        then().
+                statusCode(201)
+        ;
+
+        given().
+                contentType(JSON).
+        when().
+                get("/api/users/1/lists/1").
+        then().
+                statusCode(200).
+                body(matchesJsonSchemaInClasspath("schemas/list.json")).
+                body("id", equalTo(1)).
+                body("title", equalTo("Romantic dinner")).
+                body("products", emptyIterable())
+        ;
+
+        given().
+                contentType(JSON).
+        when().
+                delete("/api/users/1").
+        then().
+                statusCode(200)
+        ;
+    }
+}</code></pre>
+
+          <p>Si vous lancez les tests d'intégration, ils doivent échouer.</p>
+
+          <h4>Implémenter la ressource en TDD</h4>
+
+          <p>Passons maintenant à l'implémentation de ce test. Nous allons d'abord créer notre ressource REST qui réceptionnera les
+            requêtes venant du contrôleur javascript.</p>
+
+          <p>Pour celà, ajoutons un test dans la classe UsersResourceTest.java :</p>
+
+          <pre><code>@Test public void
+should_retrieve_a_list() {
+    // Given
+    Long userId = 54321L;
+    Long listId = 132L;
+
+    ShoppingList expectedList = new ShoppingList(listId, "Romantic dinner");
+    User expectedUser = new User(userId, "test@test.fr", "test", "password", Lists.newArrayList(expectedList));
+    given(userRepository.get(userId)).willReturn(expectedUser);
+
+    // When
+    Response response = resource.retrieveList(userId, listId);
+
+    // Then
+    assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+    assertThat(response.getEntity()).isEqualTo(expectedList);
+}</code></pre>
+
+          <p>Puis implémenter la fonctionnalité :</p>
+
+          <pre><code>@Path("{userId}/lists/{listId}")
+@GET
+public Response retrieveList(@PathParam("userId") Long userId,
+                             @PathParam("listId") Long listId) {
+    User user = userRepository.get(userId);
+    for (ShoppingList list : user.lists) {
+        if (listId.equals(list.id)) {
+            return Response.
+                    ok().
+                    entity(list).
+                    build()
+                    ;
+        }
+    }
+    return Response.
+            status(NOT_FOUND).
+            build()
+            ;
+}</code></pre>
+
+          <p>Relancer les tests unitaires, d'intégration et de comportement, ils doivent passer</p>
 
           <h4>Committer et pusher la fonctionnalité</h4>
+
+          <p>Committer les modifications puis les pusher sur la branche master de la remote origin.</p>
+
+          <p>Enfin, observer l'exécution du job, les tests doivent passer.</p>
 
           <!-- DEPLOY ON HEROKU -->
           <h3><a id="deploy" class="anchor" href="#deploy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Déployer l'application dans le cloud</h3>
 
-          <p>Dans cette partie, nous allons tout d'abord créer une "application" sur heroku qui se chargera d'héberger notre application.</p>
+          <p>Dans cette partie, nous allons tout d'abord créer une "application" sur heroku qui se chargera d'héberger notre code source.</p>
 
           <h4>Création de l'instance qui hébergera notre application</h4>
 
           <p>Se connecter sur le site <a href="https://dashboard.heroku.com/new" target="_blank">heroku.com</a> et créer une nouvelle application.</p>
 
           <img src="images/heroku-create-app.png"/>
-
-          <p>Ajouter un worker à l'application, ce qui correspond à une unité de calcul. Ceci alloura de la mémoire et du CPU à votre application.</p>
-
-          <img src="images/heroku-add-worker.png"/>
 
           <p>Ensuite, revenir dans le répertoire source de votre projet puis ajouter une "remote" à la configuration git et pusher le code source sur cette remote :</p>
 
@@ -492,6 +749,10 @@ Procfile declares types -> web
 -----> Launching... done, v9
 https://shopping-list.herokuapp.com/ deployed to Heroku</code></pre>
 
+          <p>Enfin, ajouter un worker à l'application, ce qui correspond à une unité de calcul. Ceci alloura de la mémoire et du CPU à votre application.</p>
+
+          <img src="images/heroku-add-worker.png"/>
+
           <h4>Automatisation du déploiement</h4>
 
           <p>Nous allons faire en sorte que chaque changement réalisé sur notre application soit déployé automatiquement lorsqu'un build se termine en succès.</p>
@@ -511,15 +772,15 @@ https://shopping-list.herokuapp.com/ deployed to Heroku</code></pre>
 
           <img src="images/codeship-deployment-setup.png" />
 
-          <p>Afin de valider le déploiment, nous allons modifier le fichier README.md pour afficher le bon status de l'intégration continue, le commiter, observer
-            les changements sur codeship, la dernière étape doit concerné le déploiement. Votre application doit toujours être déployée.</p>
-
-          <p>Vous devez aussi observer un logo codeship de couleur grise, verte ou rouge (en fonction du résultat de la dernière exécution du job)
-            sur la page principale de votre projet github.</p>
+          <p>Afin de valider le déploiement, nous allons modifier le fichier README.md pour afficher le bon status de l'intégration continue.
+            Commiter les changements et observer la dernière étape qui concerne le déploiement. Votre application doit toujours être déployée.</p>
 
           <p>Pour cela, aller dans le menu "Notifications" des "Settings du projet" et copier/coller les informations.</p>
 
           <img src="images/github-add-codeship-status.png" />
+
+          <p>Vous devez aussi observer un logo codeship de couleur grise, verte ou rouge (en fonction du résultat de la dernière exécution du job)
+            sur la page principale de votre projet github.</p>
 
           <h3>Conclusion</h3>
 
