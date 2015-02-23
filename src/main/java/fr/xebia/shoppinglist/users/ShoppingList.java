@@ -20,5 +20,5 @@ public class ShoppingList {
     public ShoppingList(Long id, String title) {
         this.id = id;
         this.title = title;
-    }
+
 }
