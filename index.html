@@ -234,7 +234,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
           <img src="images/codeship-setup-job.png"/>
 
-          <p>Sauvergarder puis modifier le fichier README.md (ajouter une ligne vide), committer et pusher sur master.</p>
+          <p>Sauvergarder puis modifier le fichier <code>README.md</code> (ajouter une ligne vide), committer et pusher sur master.</p>
 
           <p>Observer l'exécution du job :</p>
 
@@ -257,7 +257,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
           <h4>Ajouter une test de comportement</h4>
 
-          <p>Ajouter un scénario de test dans la fichier shopping-list.feature</p>
+          <p>Ajouter un scénario de test dans la fichier <code>shopping-list.feature</code></p>
 
           <pre><code>Scenario:
   Given Claire, an existing user
@@ -265,7 +265,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
   When she adds 'candels' in the list 'Romantic dinner'
   Then the list 'Romantic dinner' contains the product 'candels'</code></pre>
 
-          <p>Puis implémenter les steps dans la classe ShoppingListStepdefs.java :</p>
+          <p>Puis implémenter les steps dans la classe <code>ShoppingListStepdefs.java</code> :</p>
 
           <pre><code>@When("^she adds '(.*)' in the list '(.*)'$")
 public void she_adds_candels_in_the_list(String product, String listTitle) throws Throwable {
@@ -290,7 +290,7 @@ public void the_list_contains_the_product_candels(String listTitle, String produ
 
           <h4>Développer la vue</h4>
 
-          <p>Créer la vue list.html dans le répertoire "views" :</p>
+          <p>Créer la vue <code>list.html</code> dans le répertoire <code>views</code> :</p>
 
           <pre><code>&lt;div>
     &lt;div class="row">
@@ -322,8 +322,8 @@ public void the_list_contains_the_product_candels(String listTitle, String produ
 
           <h5>Définition de la route</h5>
 
-          <p>Nous allons modifier le fichier app.js qui contient la définition des routes. Pour celà, nous allons
-            d'abord modifier le test validant les routes dans le fichier routesSpec.js en ajoutant les deux assertions
+          <p>Nous allons modifier le fichier <code>app.js</code> qui contient la définition des routes. Pour celà, nous allons
+            d'abord modifier le test validant les routes dans le fichier <code>routesSpec.js</code> en ajoutant les deux assertions
             suivantes :</p>
 
           <pre><code>expect($route.routes['/lists/:listId'].templateUrl).toEqual('views/list.html');
@@ -335,7 +335,7 @@ expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></
 
           <p>Le test sur les routes devrait échouer.</p>
 
-          <p>Modifier le fichier app.js et ajouter la route :</p>
+          <p>Modifier le fichier <code>app.js</code> et ajouter la route :</p>
 
           <pre><code>when('/lists/:listId', {
     templateUrl: 'views/list.html',
@@ -354,7 +354,7 @@ expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></
 
           <p>Nous allons maintenant pouvoir afficher le détail d'une liste de courses en cliquant sur son nom.</p>
 
-          <p>Modifier l'affichage des listes de courses (fichier me.html) :</p>
+          <p>Modifier l'affichage des listes de courses (fichier <code>me.html</code>) :</p>
 
           <pre><code>&lt;div class="row">
     &lt;ul>
@@ -366,12 +366,12 @@ expect($route.routes['/lists/:listId'].controller).toEqual('listCtrl');</code></
 
           <h4>Développer le contrôleur en TDD</h4>
 
-          <p>Nous allons créer le contrôleur 'listCtrl.js' en commençant par les tests. Son rôle est de faire le lien en
+          <p>Nous allons créer le contrôleur <code>listCtrl.js</code> en commençant par les tests. Son rôle est de faire le lien en
           la vue et le serveur.</p>
 
           <h5>Ajout d'un test unitaire</h5>
 
-          <p>Créer le fichier 'src/test/javascript/listControllerSpec.js' :</p>
+          <p>Créer le fichier <code>src/test/javascript/listControllerSpec.js</code> :</p>
 
           <pre><code>'use strict';
 
@@ -403,7 +403,7 @@ describe('Manage list controller', function() {
 });</code></pre>
 
           <p>Ce test permet de valider l'instanciation du contrôleur. Vous pouvez remarquer qu'on teste qu'un appel au serveur
-            est bien effectué et que la liste retournée par le serveur est bien stockée dans la variable 'list'.</p>
+            est bien effectué et que la liste retournée par le serveur est bien stockée dans la variable <code>list</code>.</p>
 
           <p>Relancer les tests unitaires :</p>
 
@@ -413,7 +413,7 @@ describe('Manage list controller', function() {
 
           <h5>Implémentation du controleur la plus simple possible pour faire passer le test</h5>
 
-          <p>Créer le fichier 'src/main/webapp/js/listCtrl.js' :</p>
+          <p>Créer le fichier <code>src/main/webapp/js/listCtrl.js</code> :</p>
 
           <pre><code>shoppingList.controller('listCtrl', [ '$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
     $scope.newProduct = "";
@@ -426,11 +426,11 @@ describe('Manage list controller', function() {
     ;
 }]);</code></pre>
 
-          <p>L'inclure dans l'application (modifier le fichier 'index.html') :</p>
+          <p>L'inclure dans l'application (modifier le fichier <code>index.html</code>) :</p>
 
           <pre><code>&lt;script src="js/listCtrl.js">&lt;/script></code></pre>
 
-          <p>Ainsi que dans la configuration du plugin jasmine de maven (pom.xml) :</p>
+          <p>Ainsi que dans la configuration du plugin jasmine de maven (modifier le fichier <code>pom.xml</code>) :</p>
 
           <pre><code>&lt;sourceIncludes>
   &lt;include>app.js&lt;/include>
@@ -483,7 +483,7 @@ describe('Manage list controller', function() {
 
           <p>Nous allons maintement nous concentrer sur la partie serveur en commençant par créer un test d'intégration.</p>
 
-          <p>Créer la classe AddProductIT.java qui va ajouter un produit à une liste d'un utilisateur :</p>
+          <p>Créer la classe <code>AddProductIT.java</code> qui va ajouter un produit à une liste d'un utilisateur :</p>
 
           <pre><code>public class AddProductIT {
 
@@ -573,12 +573,12 @@ public Response addProductToList(@PathParam("userId") Long userId,
             ;
 }</code></pre>
 
-          <p>La méthode 'addProduct' n'existant pas, créez-la en la laissant vide.</p>
+          <p>La méthode <code>addProduct</code> n'existant pas, créez-la en la laissant vide.</p>
 
           <p>Relancer les tests unitaires, ils doivent passer.</p>
 
-          <p>Maintenant, nous allons tester puis implémentater la méthode 'addProduct'. Pour se faire, créer la classe
-            ShoppingListTest.java et ajouter un test validant que la liste contient bien un produit après l'avoir ajouté :</p>
+          <p>Maintenant, nous allons tester puis implémentater la méthode <code>addProduct</code>. Pour se faire, créer la classe
+            <code>ShoppingListTest.java</code> et ajouter un test validant que la liste contient bien un produit après l'avoir ajouté :</p>
 
           <pre><code>@Test public void
 should_add_a_product_to_the_list() {
@@ -602,7 +602,7 @@ should_add_a_product_to_the_list() {
           <h4>Ajouter un test d'intégration qui va tester la récupérer d'une liste d'un utilisateur</h4>
 
           <p>Nous allons utiliser la même méthode que pour l'ajout d'un produit à une liste. Commencer par créer
-            la classe RetrieveListIT.java :</p>
+            la classe <code>RetrieveListIT.java</code> :</p>
 
           <pre><code>public class RetrieveListIT {
 
@@ -655,7 +655,7 @@ should_add_a_product_to_the_list() {
           <p>Passons maintenant à l'implémentation de ce test. Nous allons d'abord créer notre ressource REST qui réceptionnera les
             requêtes venant du contrôleur javascript.</p>
 
-          <p>Pour celà, ajoutons un test dans la classe UsersResourceTest.java :</p>
+          <p>Pour celà, ajoutons un test dans la classe <code>UsersResourceTest.java</code> :</p>
 
           <pre><code>@Test public void
 should_retrieve_a_list() {
@@ -697,11 +697,11 @@ public Response retrieveList(@PathParam("userId") Long userId,
             ;
 }</code></pre>
 
-          <p>Relancer les tests unitaires, d'intégration et de comportement, ils doivent passer</p>
+          <p>Relancer les tests unitaires, d'intégration et de comportement, ils doivent passer.</p>
 
           <h4>Committer et pusher la fonctionnalité</h4>
 
-          <p>Committer les modifications puis les pusher sur la branche master de la remote origin.</p>
+          <p>Committer les modifications puis les pusher sur la branche master de la remote <code>origin</code>.</p>
 
           <p>Enfin, observer l'exécution du job, les tests doivent passer.</p>
 
@@ -772,10 +772,10 @@ https://shopping-list.herokuapp.com/ deployed to Heroku</code></pre>
 
           <img src="images/codeship-deployment-setup.png" />
 
-          <p>Afin de valider le déploiement, nous allons modifier le fichier README.md pour afficher le bon status de l'intégration continue.
+          <p>Afin de valider le déploiement, nous allons modifier le fichier <code>README.md</code> pour afficher le bon status de l'intégration continue.
             Commiter les changements et observer la dernière étape qui concerne le déploiement. Votre application doit toujours être déployée.</p>
 
-          <p>Pour cela, aller dans le menu "Notifications" des "Settings du projet" et copier/coller les informations.</p>
+          <p>Pour cela, aller dans le menu "Notifications" des "Project settings" et copier/coller les informations.</p>
 
           <img src="images/github-add-codeship-status.png" />
 
