@@ -2,6 +2,8 @@ package fr.xebia.shoppinglist.users;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
+import fr.xebia.shoppinglist.users.User;
+import fr.xebia.shoppinglist.users.UserRepository;
 
 public class UserRepositoryTest {
 
