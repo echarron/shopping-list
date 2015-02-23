@@ -19,6 +19,6 @@ public class ShoppingList {
 
     public ShoppingList(Long id, String title) {
         this.id = id;
-        this.title = "guillaume";
+        this.title = title;
     }
 }
