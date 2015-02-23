@@ -3,8 +3,10 @@ package fr.xebia.shoppinglist.step_definitions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.className;
 import static org.openqa.selenium.By.id;
+import static org.openqa.selenium.By.linkText;
 import static org.openqa.selenium.By.xpath;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,6 +53,25 @@ public class ShoppingListStepdefs {
         assertThat(webDriver.findElements(className("shopping-list"))).hasSize(1);
         WebElement createdList = webDriver.findElements(className("shopping-list")).get(0);
         assertThat(createdList.getText()).isEqualTo(listTitle);
+    }
+
+    @When("^she adds '(.*)' in the list '(.*)'$")
+    public void she_adds_candels_in_the_list(String product, String listTitle) throws Throwable {
+        new WebDriverWait(webDriver, TimeUnit.SECONDS.toSeconds(1L)).until(presenceOfElementLocated(className("shopping-list")));
+        webDriver.findElement(linkText(listTitle)).click();
+        assertThat(webDriver.findElement(id("products"))).isNotNull();
+
+        webDriver.findElement(id("newProduct")).sendKeys(product);
+        webDriver.findElement(id("btnAddProduct")).click();
+    }
+
+    @Then("^the list '(.*)' contains the product '(.*)'$")
+    public void the_list_contains_the_product_candels(String listTitle, String product) throws Throwable {
+        assertThat(webDriver.findElement(id("products"))).isNotNull();
+        assertThat(webDriver.findElement(xpath("(//h3)[1]")).getText()).isEqualTo(listTitle + " (1)");
+        assertThat(webDriver.findElements(className("product"))).hasSize(1);
+        WebElement existingProduct = webDriver.findElements(className("product")).get(0);
+        assertThat(existingProduct.getText()).isEqualTo(product);
     }
 
     @After

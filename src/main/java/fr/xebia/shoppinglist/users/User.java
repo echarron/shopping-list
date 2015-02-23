@@ -31,6 +31,14 @@ public class User {
         this.password = password;
     }
 
+    public User(Long id, String email, String username, String password, List<ShoppingList> shoppingLists) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.lists.addAll(shoppingLists);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
